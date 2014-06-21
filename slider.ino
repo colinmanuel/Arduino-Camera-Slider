@@ -30,7 +30,7 @@ int debounce_timeout = 100;
 int read_LCD_buttons()
 {
  adc_key_in = analogRead(0);      // read the value from the sensor
- // my buttons when read are centered at these valies: 0, 144, 329, 504, 741
+ // slider_030414.ino buttons when read are centered at these valies: 0, 144, 329, 504, 741
  // we add approx 50 to those values and check to see if we are close
  if (adc_key_in > 1000) return btnNONE; // We make this the 1st option for speed reasons since it will be the most likely result
  if (adc_key_in < 50)   return btnRIGHT; 
@@ -41,8 +41,6 @@ int read_LCD_buttons()
  return btnNONE;  // when all others fail, return this...
 }
 
-// did I adequately replace startStop?
-// int startStop = 10;
 int runTime1;
 int show = 1;     //what menu to show
 int dollySpeedNum = 0; //number of the speed
@@ -52,21 +50,19 @@ int runTime = 0;    //time to run after delay
 int motorPin = 3;
 int motorState = 0;      // the current state of the output pin
 int val4;
-// shutter was set to 2 instead of 1 for some reason??
 int shutter = 1;
 int shutterCount = 0;
 int shutterVal = 0;
 
-/*int bbtnRIGHT = read_LCD_buttons(btnRIGHT);
-int bbtnUP = read_LCD_buttons(btnUP);
-int bbtnDOWN = read_LCD_buttons(btnDOWN);
-int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
 
-/*KEY
+
+  /*
+  KEY
   button1 - btnUP - increase
   button2 - btnDOWN - decrease
   button3 - btnSELECT - select
-  startStop - btnLEFT - startStop*/
+  startStop - btnLEFT - startStop
+  */
 
 Bounce bouncer1 = Bounce(btnUP, 15); //deblounce (button, milliseconds)
 Bounce bouncer2 = Bounce(btnDOWN, 15);
@@ -78,7 +74,6 @@ Bounce bouncer4 = Bounce(btnSELECT, 15);
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 void setup() {
-  // add serial definition - cm
   Serial.begin(9600);
   pinMode( adc_key_in, INPUT );         //ensure A0 is an input
   pinMode(motorPin, OUTPUT);
@@ -91,56 +86,9 @@ void setup() {
   delay(1000);
 }
 
-
-
-// ####### added bounce from rfduino
-/*  int debounce(int state)
-  {
-    int start = millis();
-    int debounce_start = start;
-    
-    while (millis() - start < debounce_timeout)
-      if (digitalRead(lcd_key) == state)
-      {
-        if (millis() - debounce_start >= debounce_time)
-          return 1;
-      }
-      else 
-        debounce_start = millis();
-
-    return 0;
-  }
-
-  int delay_until_button(int state)
-  {
-    // set button edge to wake up on
-    if (state)
-      // RFduino_pinWake(button, HIGH);
-    motorState = 1;
-
-    else
-      // RFduino_pinWake(button, LOW);
-    motorState = 0;
-      
-  }*/
-
-
 void loop() {
- // hiding lcd positioning as it wasn't here in original
- // lcd.setCursor(9,1);            // move cursor to second line "1" and 9 spaces over
- // lcd.print(millis()/1000);      // display seconds elapsed since power-up
- 
- 
- // lcd.setCursor(0,1);            // move to the begining of the second line
  lcd_key = read_LCD_buttons();  // read the buttons
 
-
-/*int bbtnRIGHT = read_LCD_buttons(btnRIGHT);
-int bbtnUP = read_LCD_buttons(btnUP);
-int bbtnDOWN = read_LCD_buttons(btnDOWN);
-int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
-
-//#############
 // create switch functionality for btnSELECT
 
   if(motorState > 1) {
@@ -149,14 +97,10 @@ int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
 
   if(lcd_key == btnSELECT) {
     motorState = motorState + 1;
-      // delay(delayTime*3);
     delay(delayTime * 3);
 
   }
-  // Serial.println(motorState);
 
-
-//#############
   if(shutterVal > 1) {
     shutterVal = 0;
   }
@@ -169,9 +113,6 @@ int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
     runTime1 = runTime;
   }
 
-
-  // this is where it gets tricky
-// how to replace bouncer reading/updating with my buttons???
   bouncer1.update();  //update the buttons
   bouncer2.update();
   bouncer3.update();
@@ -185,12 +126,6 @@ int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
   if (show > 4) {              //Number of menus
     show = 1;
   }
-  // if(val3 == HIGH) {    //scroll through the different menus
-    /*KEY
-  button1 - btnUP - increase
-  button2 - btnDOWN - decrease
-  button3 - btnSELECT - select
-  startStop - btnLEFT - startStop*/
   if(lcd_key == btnRIGHT) {    //scroll through the different menus
     show = show + 1;    //the show number indicates which menu we're in
     delay(delayTime * 5);
@@ -212,27 +147,16 @@ int bbtnSELECT = read_LCD_buttons(btnSELECT);*/
     }
   }
 
-
-// create separate switch function to replace
-// btnSELECT with HIGH and LOW
-  // if(val4 == HIGH && shutterVal == 0){
-  // if(lcd_key == btnSELECT && shutterVal == 0){
   if(motorState == 1 && shutterVal == 0){
     // Add code here to keep motor ON until turned OFF
     motorOn();
   }
 
-    // ####### take another look here. adequate replacement?
-    // if(lcd_key != btnSELECT){
-    // if(val4 == LOW){
   if(motorState == 0){
     // Add code here to keep motor OFF until turned ON
       analogWrite(motorPin, LOW);
     }
 
-  // if(val4 == HIGH && shutterVal == 1) {
-  // if(lcd_key == btnSELECT && shutterVal == 1) {
-// original location
   if(motorState == 1 && shutterVal == 1) {
       motorOn();
       lcd.setCursor(0,0);
@@ -280,12 +204,10 @@ void dollyDelay(int but1, int but2) {
   decimal = delayDolly%10;
   lcd.setCursor(0,0);
   lcd.print("Delay:          ");
-  // if(but1 == HIGH) {
   if(lcd_key == btnUP) {
     delayDolly = delayDolly + 1;
     delay(delayTime);
   }
-  // if(but2 == HIGH) {
   if(lcd_key == btnDOWN) {
     delayDolly = delayDolly - 1;
     delay(delayTime);
@@ -328,7 +250,7 @@ void runningTime(int num1, int num2) {
   int decimal1;
   decimal1 = runTime%10;
   lcd.setCursor(0,0);
-  // why does run time not appear normally????
+  // TODO: fix run time display
   lcd.print("Run time:       ");
   if(lcd_key == btnUP) {
     runTime = runTime + 1;
@@ -454,8 +376,6 @@ lcd.setCursor(0,1);
     lcd.print("s");
 }
 
-/*  if(lcd_key != btnSELECT) {
-  if(val4 == LOW) {*/
   if(motorState == 0) {
     if(shutterVal == 0) {
       lcd.setCursor(10,1);
@@ -469,28 +389,20 @@ lcd.setCursor(0,1);
   }
 
 void motorOn() {
-  int speedValue = map(dollySpeedNum, 0, 100, 0, 255);
-    // delay(1);    
-    // delay(3000);    
+  int speedValue = map(dollySpeedNum, 0, 100, 0, 255);  
     delay(delayDolly*100);
 
     analogWrite(motorPin, speedValue);
     Serial.println(runTime1);
     delay(runTime1*100);
 
-    // delay(delayDolly*100);    
     if(delayDolly > 0) {
       // turn the motor off if the delayDolly variable is greater than 0
-      analogWrite(motorPin, LOW);
-      // Serial.println(delayDolly);
-      // Serial.println(shutterCount);
-      // delay(delayDolly*100);    
+      analogWrite(motorPin, LOW); 
       delay(1000);    
       picture();
       shutterCount = shutterCount + 1;
     }
-    // delay(delayDolly*100);
-
 }
 
 void picture() {
