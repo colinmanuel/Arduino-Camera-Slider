@@ -4,6 +4,22 @@ Arduino Slider
 ## Goal
 Capture the scale and spirit of Southwest Texas with a sliding time lapse video. The [resulting video](https://vimeo.com/93436904) was shot on a late March vacation to Marfa, Alpine, Terlingua and Big Bend National Park. In hindsight, the project was pretty much just an excuse to squeeze an ungodly amount of time, money and frustration into a minute and a half of frenetic storytelling. On that count, I think it succeeded.
 
+Arduino LCD Screen
+~~~~~~~~~~~~~~~~~~~~~~~~~
+![Arduino Closeup](/img/arduino-closeup.jpg?raw=true "Arduino Closeup")
+
+Slider Close-up 
+~~~~~~~~~~~~~~~~~~~~~~~~~
+![Slider Closeup](/img/slider-closeup.jpg?raw=true "Slider Closeup")
+
+Completed Slider
+~~~~~~~~~~~~~~~~~~~~~~~~~
+![Slider Complete](/img/slider-complete.jpg?raw=true "Slider Complete")
+
+Slider in Action
+~~~~~~~~~~~~~~~~~~~~~~~~~
+![Slider in Action](/img/slider-action.jpg?raw=true "Slider in Action")
+
 ## Features
 - Arduino Uno drives a 12V motor on a fixed track and fires the camera at fixed intervals
 - LCD screen grants fine grain user control of the interval duration (how long the motor carrying the camera runs on the track and how long it pauses) as well as how long to wait before triggering a shot
